@@ -22,8 +22,8 @@ import java.util.List;
 @Table(name = "product")
 public class Product {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private int id;
+    @Column(name = "id")
+    private String id;
 
     @Column(name = "name", nullable = false, length = 300)
     private String name;
@@ -31,8 +31,9 @@ public class Product {
     @Column(name = "slug", nullable = false)
     private String slug;
 
-    @Column(name = "brand_id")
-    private int brandId; // id thương hiệu
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "brand_id")
+    private Brand brandId; // id thương hiệu
 
     @Column(name = "description", columnDefinition = "TEXT")
     private String description; // Mô tả
@@ -49,4 +50,19 @@ public class Product {
     @Column(name = "onfeet_images", columnDefinition = "JSON")
     @Type(type = "json")
     private List<String> onfeetImages; // Mảng link ảnh feedback
+
+    @Column(name = "product_images", columnDefinition = "JSON")
+    @Type(type = "json")
+    private List<String> productImages; // Mảng link ảnh sản phẩm
+
+    @Column(name = "total_sold")
+    private int totalSold; // Số lượng đã bán
+
+    @ManyToMany
+    @JoinTable(
+            name="product_category",
+            joinColumns = @JoinColumn(name = "product_id"),
+            inverseJoinColumns = @JoinColumn(name = "category_id")
+    )
+    private List<Category> categories;
 }
